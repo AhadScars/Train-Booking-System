@@ -80,7 +80,3 @@ Styles are centralized in `public/css/site.css` for a consistent, modern interfa
   php artisan migrate:fresh --seed
   ```
 - The login route name is defined on the GET `/login` page so `route('login')` resolves correctly.
-
-## License
-
-This project is provided under the MIT License.
