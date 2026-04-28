@@ -49,15 +49,47 @@
                     </div>
 
                     <hr>
-                    <div class="train-bottom">
-                        <div class="class-prices">
-                            <p>🚆 First Class: ₹{{ $classes['first_class'] ?? 'N/A' }}</p>
-                            <p>🛏 Sleeper: ₹{{ $classes['sleeper'] ?? 'N/A' }}</p>
-                            <p>💺 Economy: ₹{{ $classes['economy'] ?? 'N/A' }}</p>
+                    <div class="class-prices">
+                        <div class="price-item">
+                            <div>
+                                <strong>🚆 First Class</strong>
+                                <p>₹{{ $classes['first_class'] ?? 'N/A' }}</p>
+                            </div>
+                            @auth
+                            <form action="/passenger-info/{{ $train->id }}/first_class" method="GET">
+                                <button class="btn" type="submit" @if(empty($classes['first_class'])) disabled @endif>Book Now</button>
+                            </form>
+                            @else
+                                <button class="btn" disabled>Login to Book</button>
+                            @endauth
                         </div>
 
-                        <div class="action-btn">
-                            <button class="btn">Book Ticket</button>
+                        <div class="price-item">
+                            <div>
+                                <strong>🛏 Sleeper</strong>
+                                <p>₹{{ $classes['sleeper'] ?? 'N/A' }}</p>
+                            </div>
+                            @auth
+                            <form action="/passenger-info/{{ $train->id }}/sleeper" method="GET">
+                                <button class="btn" type="submit" @if(empty($classes['sleeper'])) disabled @endif>Book Now</button>
+                            </form>
+                            @else
+                                <button class="btn" disabled>Login to Book</button>
+                            @endauth
+                        </div>
+
+                        <div class="price-item">
+                            <div>
+                                <strong>💺 Economy</strong>
+                                <p>₹{{ $classes['economy'] ?? 'N/A' }}</p>
+                            </div>
+                            @auth
+                            <form action="/passenger-info/{{ $train->id }}/economy" method="GET">
+                                <button class="btn" type="submit" @if(empty($classes['economy'])) disabled @endif>Book Now</button>
+                            @else
+                                <button class="btn" disabled>Login to Book</button>
+                            @endauth
+                            </form>
                         </div>
                     </div>
                 </article>
