@@ -15,7 +15,7 @@
         <h2>Welcome to Train Booking System</h2>
         <p>Fast, easy and secure ticket booking.</p>
         <a href="/trains" class="btn">View Trains</a>
-        <button class="btn">Book Ticket</button>
+        
     </div>
 </section>
 
