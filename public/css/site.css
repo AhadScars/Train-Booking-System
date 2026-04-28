@@ -328,6 +328,44 @@ h3 {
     margin: 0;
 }
 
+.class-prices {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.price-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.price-item strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--text);
+}
+
+.price-item p {
+    margin: 0;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.price-item form {
+    margin: 0;
+}
+
+.price-item button {
+    width: auto;
+    white-space: nowrap;
+}
+
 .status-pill {
     display: inline-flex;
     align-items: center;

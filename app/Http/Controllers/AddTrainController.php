@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AddTrain;
+use App\Models\Passenger;
 use Illuminate\Http\Request;
 
 class AddTrainController extends Controller
@@ -17,13 +18,29 @@ class AddTrainController extends Controller
         return view('trains', compact('trains'));
     }
 
+    /**
+     * Display user bookings
+     */
+    public function showBookings()
+    {
+        $bookings = Passenger::where('user_id', auth()->id())
+            ->with('train')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('bookings', compact('bookings'));
+    }
+
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function passengerInformation($trainId = null, $class = null)
     {
-        //
+        if ($trainId) {
+            $train = AddTrain::findOrFail($trainId);
+            return view('passanger-information', compact('train', 'class'));
+        }
+        return view('passanger-information');
     }
 
     /**
