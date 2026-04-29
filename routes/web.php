@@ -25,25 +25,35 @@ Route::get('/register', function () {
     return view('register');
 });
 
-Route::get('/trains', [AddTrainController::class, 'index']);
-
-Route::get('/bookings', [AddTrainController::class, 'showBookings'])->middleware('auth');
-
-Route::get('/add-train', function () {
-    return view('add-train');
-});
-
-Route::post('/add-train', [AddTrainController::class, 'store']);
-
-Route::get('/information',[AddTrainController::class,'passengerInformation']);
-
-Route::get('/passenger-info/{train}/{class}', [AddTrainController::class, 'passengerInformation']);
-
 Route::post('/register', [UserController::class, 'store'])->name('register');
-
 Route::post('/login', [UserController::class, 'authenticate']);
-
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-Route::post('/pay/{train}/{class}', [PaymentController::class, 'checkout']);
+// User Profile Routes
+Route::get('/profile/{user}', [UserController::class, 'profile'])->middleware('auth');
+Route::get('/profile/{user}/edit', [UserController::class, 'editProfile'])->middleware('auth');
+Route::put('/profile/{user}', [UserController::class, 'updateProfile'])->middleware('auth');
+Route::get('/users', [UserController::class, 'allUsers'])->middleware('auth');
+
+// Public Trains
+Route::get('/trains', [AddTrainController::class, 'index']);
+Route::get('/passenger-info/{train}', [AddTrainController::class, 'passengerInformation'])->middleware('auth');
+Route::post('/pay/{train}', [PaymentController::class, 'checkout'])->middleware('auth');
 Route::get('/payment-success', [PaymentController::class, 'success']);
+
+// User Bookings
+Route::get('/bookings', [AddTrainController::class, 'showBookings'])->middleware('auth');
+
+// Admin Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AddTrainController::class, 'adminDashboard'])->name('admin.dashboard');
+    Route::get('/trains', [AddTrainController::class, 'adminTrains'])->name('admin.trains');
+    Route::get('/add-train', function () {
+        return view('add-train');
+    });
+    Route::post('/add-train', [AddTrainController::class, 'store']);
+    Route::get('/trains/{train}/edit', [AddTrainController::class, 'editTrain']);
+    Route::put('/trains/{train}', [AddTrainController::class, 'updateTrain']);
+    Route::delete('/trains/{train}', [AddTrainController::class, 'deleteTrain']);
+    Route::get('/bookings', [AddTrainController::class, 'allBookings'])->name('admin.bookings');
+});

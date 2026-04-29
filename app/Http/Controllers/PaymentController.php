@@ -10,9 +10,12 @@ use Stripe\Stripe;
 
 class PaymentController extends Controller
 {
-    public function checkout($trainId, $class, Request $request)
+    public function checkout($trainId, Request $request)
     {
+        $class = $request->input('class');
+        
         $request->validate([
+            'class' => 'required|string|in:first_class,sleeper,economy',
             'name' => 'required|string|max:255',
             'age' => 'required|integer|min:1|max:120',
             'mobile' => 'required|string|max:15',
@@ -66,7 +69,7 @@ class PaymentController extends Controller
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => url("/payment-success?session_id={CHECKOUT_SESSION_ID}&train={$train->id}&class={$class}&passenger={$passenger->id}"),
+            'success_url' => url("/payment-success?session_id={CHECKOUT_SESSION_ID}&train={$train->id}&passenger={$passenger->id}"),
             'cancel_url' => url('/trains'),
         ]);
 
@@ -77,7 +80,6 @@ class PaymentController extends Controller
     {
         $sessionId = $request->query('session_id');
         $trainId = $request->query('train');
-        $class = $request->query('class');
         $passengerId = $request->query('passenger');
 
         if (! $sessionId || ! $trainId) {
@@ -98,14 +100,16 @@ class PaymentController extends Controller
         }
 
         $train = AddTrain::findOrFail($trainId);
+        $passenger = $passengerId ? Passenger::find($passengerId) : null;
+        
+        // Get class from passenger record
+        $class = $passenger?->class ?? null;
         $classLabel = match ($class) {
             'first_class' => 'First Class',
             'sleeper' => 'Sleeper',
             'economy' => 'Economy',
             default => 'General',
         };
-
-        $passenger = $passengerId ? Passenger::find($passengerId) : null;
 
         $paymentMethods = $stripeSession->payment_method_types ?? [];
         $customerDetails = $stripeSession->customer_details ?? null;

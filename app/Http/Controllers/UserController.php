@@ -91,4 +91,58 @@ class UserController extends Controller
     {
         //
     }
+
+    /**
+     * Show user profile
+     */
+    public function profile($userId)
+    {
+        $user = \App\Models\User::findOrFail($userId);
+        return view('profile', compact('user'));
+    }
+
+    /**
+     * Edit profile form
+     */
+    public function editProfile($userId)
+    {
+        $user = \App\Models\User::findOrFail($userId);
+        
+        // Users can only edit their own profile unless they're admin
+        if (auth()->id() !== $user->id && !auth()->user()->isAdmin()) {
+            return redirect('/users')->with('error', 'You cannot edit this profile.');
+        }
+
+        return view('edit-profile', compact('user'));
+    }
+
+    /**
+     * Update profile
+     */
+    public function updateProfile(Request $request, $userId)
+    {
+        $user = \App\Models\User::findOrFail($userId);
+        
+        // Users can only edit their own profile unless they're admin
+        if (auth()->id() !== $user->id && !auth()->user()->isAdmin()) {
+            return redirect('/users')->with('error', 'You cannot edit this profile.');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update($validated);
+        return redirect("/profile/{$user->id}")->with('success', 'Profile updated successfully!');
+    }
+
+    /**
+     * Show all users
+     */
+    public function allUsers()
+    {
+        $users = \App\Models\User::where('role', 'user')->get();
+        return view('all-users', compact('users'));
+    }
 }

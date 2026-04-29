@@ -30,15 +30,102 @@ class AddTrainController extends Controller
         return view('bookings', compact('bookings'));
     }
 
+    /**
+     * Display all bookings for admin
+     */
+    public function allBookings()
+    {
+        $bookings = Passenger::with('train', 'user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('admin.bookings', compact('bookings'));
+    }
+
+    /**
+     * Admin dashboard
+     */
+    public function adminDashboard()
+    {
+        $totalTrains = AddTrain::count();
+        $totalBookings = Passenger::count();
+        $totalUsers = \App\Models\User::where('role', 'user')->count();
+        $recentBookings = Passenger::with('train', 'user')->latest()->limit(5)->get();
+        
+        return view('admin.dashboard', compact('totalTrains', 'totalBookings', 'totalUsers', 'recentBookings'));
+    }
+
+    /**
+     * Show admin trains list
+     */
+    public function adminTrains()
+    {
+        $trains = AddTrain::all();
+        return view('admin.trains', compact('trains'));
+    }
+
+    /**
+     * Edit train form
+     */
+    public function editTrain(AddTrain $train)
+    {
+        return view('admin.edit-train', compact('train'));
+    }
+
+    /**
+     * Update train
+     */
+    public function updateTrain(Request $request, AddTrain $train)
+    {
+        $validated = $request->validate([
+            'train_name' => 'required|string|max:255',
+            'origin' => 'required|string|max:255',
+            'destination' => 'required|string|max:255',
+            'departure_time' => 'required|date_format:H:i',
+            'arrival_time' => 'required|date_format:H:i|after:departure_time',
+            'price' => 'required|numeric|min:0',
+            'first_class' => 'nullable|numeric|min:0',
+            'sleeper' => 'nullable|numeric|min:0',
+            'economy' => 'nullable|numeric|min:0',
+        ]);
+
+        $train->train_name = $validated['train_name'];
+        $train->origin = $validated['origin'];
+        $train->destination = $validated['destination'];
+        $train->departure_time = $validated['departure_time'];
+        $train->arrival_time = $validated['arrival_time'];
+        $train->price = $validated['price'];
+
+        $train->classes = [
+            'first_class' => $validated['first_class'] ?? 0,
+            'sleeper' => $validated['sleeper'] ?? 0,
+            'economy' => $validated['economy'] ?? 0,
+        ];
+
+        $train->save();
+        return redirect('/admin/trains')->with('success', 'Train updated successfully!');
+    }
+
+    /**
+     * Delete train
+     */
+    public function deleteTrain(AddTrain $train)
+    {
+        $train->delete();
+        return redirect('/admin/trains')->with('success', 'Train deleted successfully!');
+    }
+
 
     /**
      * Show the form for creating a new resource.
      */
-    public function passengerInformation($trainId = null, $class = null)
+    public function passengerInformation($trainId = null)
     {
         if ($trainId) {
             $train = AddTrain::findOrFail($trainId);
-            return view('passanger-information', compact('train', 'class'));
+            $classes = is_string($train->classes)
+                ? json_decode($train->classes, true)
+                : $train->classes;
+            return view('passanger-information', compact('train', 'classes'));
         }
         return view('passanger-information');
     }

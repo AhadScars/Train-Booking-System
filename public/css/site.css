@@ -248,6 +248,29 @@ h3 {
     color: var(--text);
     padding: 1rem 1.1rem;
     margin-top: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.form-card input:hover,
+.form-card textarea:hover,
+.form-card select:hover,
+.box input:hover,
+.box textarea:hover,
+.box select:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus,
+.box input:focus,
+.box textarea:focus,
+.box select:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
 }
 
 .form-card textarea,
@@ -256,7 +279,7 @@ h3 {
     resize: vertical;
 }
 
-..form-card label,
+.form-card label,
 .box label {
     display: block;
     margin-top: 1.25rem;
@@ -424,4 +447,67 @@ h3 {
     button {
         width: 100%;
     }
+}
+
+/* Enhanced Select Styling */
+.form-card select,
+.box select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.4em 1.4em;
+    padding-right: 2.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-card select:hover,
+.box select:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(56, 189, 248, 0.4);
+}
+
+.form-card select:focus,
+.box select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.form-card select option,
+.box select option {
+    background: var(--surface);
+    color: var(--text);
+    padding: 0.75rem;
+}
+
+.form-card select option:hover,
+.box select option:hover {
+    background: var(--accent);
+    color: #020617;
+}
+
+.form-card select option:checked,
+.box select option:checked {
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    color: #020617;
+}
+
+/* Input Placeholder Styling */
+.form-card input::placeholder,
+.form-card textarea::placeholder,
+.box input::placeholder,
+.box textarea::placeholder {
+    color: rgba(148, 163, 184, 0.5);
+}
+
+.form-card input:focus::placeholder,
+.form-card textarea:focus::placeholder,
+.box input:focus::placeholder,
+.box textarea:focus::placeholder {
+    color: rgba(148, 163, 184, 0.3);
 }
