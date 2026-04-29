@@ -6,6 +6,11 @@
         <a href="/contact-us">Contact Us</a>
         @auth
             <a href="/trains">Trains</a>
+            @if(auth()->user()->isAdmin())
+                <a href="/admin/dashboard" style="color: var(--accent); font-weight: bold;">👨‍💼 Admin Panel</a>
+            @endif
+            <a href="/users">Users</a>
+            <a href="/profile/{{ auth()->id() }}">👤 Profile</a>
             <a href="/bookings">Show Train Bookings</a>
             <form method="POST" action="{{ route('logout') }}" class="logout-form">
                 @csrf

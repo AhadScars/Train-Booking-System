@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Available Trains</title>
+    <title>Admin - Manage Trains</title>
     <link rel="stylesheet" href="/css/site.css">
 </head>
 
@@ -14,15 +14,11 @@
     <main class="container">
         <section class="hero hero-compact">
             <div class="hero-content">
-                <h2>Available Trains</h2>
-                <p>Browse current train services and fares below.</p>
-                @auth
-                    @if(auth()->user()->isAdmin())
-                        <div class="form-actions">
-                            <a href="/admin/add-train" class="btn">➕ Add Train</a>
-                        </div>
-                    @endif
-                @endauth
+                <h2>🚆 Manage Trains</h2>
+                <p>Add, edit, or delete trains from the system.</p>
+                <div class="form-actions">
+                    <a href="/admin/add-train" class="btn">➕ Add New Train</a>
+                </div>
             </div>
         </section>
 
@@ -46,7 +42,6 @@
                         <div>
                             <p><strong>Departure:</strong> {{ $train->departure_time }}</p>
                             <p><strong>Arrival:</strong> {{ $train->arrival_time }}</p>
-                            <p><strong>General Class Price:</strong> ₹{{ $train->price }}</p>
                         </div>
                     </div>
 
@@ -66,27 +61,21 @@
                                 <p style="margin: 5px 0;">₹{{ $classes['economy'] ?? 'N/A' }}</p>
                             </div>
                         </div>
-                        @auth
-                            @if(auth()->user()->isAdmin())
-                                <div class="form-actions" style="gap: 1rem; margin-bottom: 1rem;">
-                                    <a href="/admin/trains/{{ $train->id }}/edit" class="btn" style="flex: 1; text-align: center;">✏️ Edit</a>
-                                    <form action="/admin/trains/{{ $train->id }}" method="POST" style="flex: 1;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, var(--danger), #f87171);">🗑️ Delete</button>
-                                    </form>
-                                </div>
-                            @else
-                                <form action="/passenger-info/{{ $train->id }}" method="GET">
-                                    <button class="btn" type="submit">Book Now</button>
-                                </form>
-                            @endif
-                        @else
-                            <button class="btn" disabled>Login to Book</button>
-                        @endauth
+                        <div class="form-actions" style="gap: 1rem;">
+                            <a href="/admin/trains/{{ $train->id }}/edit" class="btn" style="flex: 1; text-align: center;">✏️ Edit</a>
+                            <form action="/admin/trains/{{ $train->id }}" method="POST" style="flex: 1;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, var(--danger), #f87171);" onclick="return confirm('Are you sure you want to delete this train?');">🗑️ Delete</button>
+                            </form>
+                        </div>
                     </div>
                 </article>
             @endforeach
+        </div>
+
+        <div class="form-actions" style="margin-top: 2rem;">
+            <a href="/admin/dashboard" class="btn">Back to Dashboard</a>
         </div>
     </main>
 
