@@ -43,6 +43,9 @@
                         <p><strong>Class:</strong> {{ ucfirst(str_replace('_', ' ', $booking->class)) }}</p>
                         <p><strong>Price:</strong> ₹{{ number_format($booking->price, 2) }}</p>
                         <p><strong>Booked On:</strong> {{ $booking->created_at->format('d M Y, h:i A') }}</p>
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <a href="{{ route('downloadPDF', ['passenger' => $booking->id]) }}" class="btn" style="flex: 1; text-align: center; display: inline-block;">📥 Download Ticket</a>
+                        </div>
                     </div>
                 </article>
             @endforeach
