@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AddTrain;
 use App\Models\Passenger;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\Stripe;
@@ -124,5 +125,32 @@ class PaymentController extends Controller
             'sessionId' => $sessionId,
             'passenger' => $passenger,
         ]);
+    }
+    public function downloadPDF($passengerId)
+    {
+        $passenger = Passenger::with('train', 'user')->findOrFail($passengerId);
+        
+        // Ensure user can only download their own tickets
+        if ($passenger->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to this ticket.');
+        }
+        
+        $train = $passenger->train;
+        
+        $classLabel = match ($passenger->class) {
+            'first_class' => 'First Class',
+            'sleeper' => 'Sleeper',
+            'economy' => 'Economy',
+            default => 'General',
+        };
+        
+        $pdf = Pdf::loadView('downloadPDF', [
+            'passenger' => $passenger,
+            'train' => $train,
+            'classLabel' => $classLabel,
+        ]);
+        
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->download('ticket_' . $passenger->id . '.pdf');
     }
 }

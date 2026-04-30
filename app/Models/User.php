@@ -6,8 +6,9 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable 
 {
     use HasFactory, Notifiable;
 
@@ -53,21 +54,5 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->role === 'admin';
-    }
-
-    /**
-     * Check if user is regular user
-     */
-    public function isUser()
-    {
-        return $this->role === 'user';
-    }
-
-    /**
-     * Get user's bookings
-     */
-    public function bookings()
-    {
-        return $this->hasMany(Passenger::class);
     }
 }

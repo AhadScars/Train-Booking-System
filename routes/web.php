@@ -28,6 +28,8 @@ Route::get('/register', function () {
 Route::post('/register', [UserController::class, 'store'])->name('register');
 Route::post('/login', [UserController::class, 'authenticate']);
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+Route::get('/downloadPDF/{passenger}', [PaymentController::class, 'downloadPDF'])->middleware('auth')->name('downloadPDF');
+
 
 // User Profile Routes
 Route::get('/profile/{user}', [UserController::class, 'profile'])->middleware('auth');
@@ -57,3 +59,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/trains/{train}', [AddTrainController::class, 'deleteTrain']);
     Route::get('/bookings', [AddTrainController::class, 'allBookings'])->name('admin.bookings');
 });
+
